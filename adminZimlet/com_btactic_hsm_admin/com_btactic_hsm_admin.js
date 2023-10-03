@@ -61,9 +61,9 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
                     {type:_ZA_TOP_GROUPER_,
                         label:com_btactic_hsm_admin.zetaHSMTab,
                         items:[
-                            {ref: "zimbraHsmPolicy", type: _TEXTFIELD_, label: com_btactic_hsm_admin.HSMPolicy, msgName: com_btactic_hsm_admin.HSMPolicy, width : "80em"},
                             {type: _DWT_ALERT_, containerCssStyle: "padding-bottom:0px", style: DwtAlert.INFO, iconVisible: true, content : com_btactic_hsm_admin.HSMExplanation,
-                            colSpan : "*"}
+                            colSpan : "*"},
+                            {ref: "zimbraHsmPolicy", type: _TEXTFIELD_, label: com_btactic_hsm_admin.HSMPolicy, msgName: com_btactic_hsm_admin.HSMPolicy, width : "80em"}
                         ]
                     }
                 ]
