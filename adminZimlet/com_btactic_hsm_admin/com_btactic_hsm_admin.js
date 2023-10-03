@@ -53,7 +53,8 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
                 items: [
                     {label: null, type: _OUTPUT_, value: com_btactic_hsm_admin.zetaPromo, colSpan:"*", cssStyle:"font-size:20pt; font-weight: bold;"},
                     {type:_SPACER_, colSpan:"*"},
-                    {type:_ZAGROUP_,
+                    {type:_ZA_TOP_GROUPER_, id:"globalconfig_zeta_hsm",colSizes:["auto"],numCols:1,
+                        label:com_btactic_hsm_admin.zetaHSMTab,
                         items:[
                             {ref: "zimbraHsmPolicy", type: _TEXTFIELD_, label: com_btactic_hsm_admin.HSMPolicy, msgName: com_btactic_hsm_admin.HSMPolicy, width : "80em"}
                         ]
