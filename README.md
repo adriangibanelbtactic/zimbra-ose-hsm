@@ -9,6 +9,18 @@ Usually it is used to move older data to slower-but-cheapear storages.
 
 **WARNING: The development stage is in ALPHA QUALITY and it is not ready for production deployment.**
 
+## Developer documentation
+
+This documentation is aimed at developers, not at admins.
+
+### How to build the admin zimlet
+
+- Check: [ADMINZIMLET_BUILD.md](ADMINZIMLET_BUILD.md) on how to build the Administration Console Zimlet.
+
+### How to install the admin zimlet
+
+- Check: [ADMINZIMLET_INSTALL.md](ADMINZIMLET_INSTALL.md) on how to install the Administration Console Zimlet.
+
 ## Licenses
 
 ### License (Extension)
