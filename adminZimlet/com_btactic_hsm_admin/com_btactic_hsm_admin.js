@@ -31,7 +31,7 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
 
     // Show additional HSM attributes for GlobalConfig
     if (ZaGlobalConfig && ZaGlobalConfig.myXModel && ZaGlobalConfig.myXModel.items) {
-        ZaGlobalConfig.myXModel.push({id: "zimbraHsmPolicy", type: _STRING_, ref: "attrs/" + "zimbraHsmPolicy"});
+        ZaGlobalConfig.myXModel.items.push({id: "zimbraHsmPolicy", type: _STRING_, ref: "attrs/" + "zimbraHsmPolicy"});
     }
 
     if(ZaTabView.XFormModifiers["GlobalConfigXFormView"]) {
