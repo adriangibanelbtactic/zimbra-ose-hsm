@@ -47,13 +47,18 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
             tabBar.choices.push({value:hsmTabIx, label:com_btactic_hsm_admin.zetaHSMTab});
 
             var hsmAccountTab={
-                type:_ZATABCASE_,
-                numCols:1,
-                caseKey:hsmTabIx,
+                type : _ZATABCASE_,
+                caseKey : hsmTabIx,
+                paddingStyle : "padding-left:15px;",
+                width : "98%",
+                cellpadding : 2,
+                colSizes : [ "auto" ],
+                numCols : 1,
+                id : "global_zeta_hsm",
                 items: [
                     {label: null, type: _OUTPUT_, value: com_btactic_hsm_admin.zetaPromo, colSpan:"*", cssStyle:"font-size:20pt; font-weight: bold;"},
                     {type:_SPACER_, colSpan:"*"},
-                    {type:_ZA_TOP_GROUPER_, id:"globalconfig_zeta_hsm",colSizes:["auto"],numCols:1,
+                    {type:_ZA_TOP_GROUPER_,
                         label:com_btactic_hsm_admin.zetaHSMTab,
                         items:[
                             {ref: "zimbraHsmPolicy", type: _TEXTFIELD_, label: com_btactic_hsm_admin.HSMPolicy, msgName: com_btactic_hsm_admin.HSMPolicy, width : "80em"}
