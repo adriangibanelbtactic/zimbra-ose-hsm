@@ -46,7 +46,7 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
             var hsmTabIx = ++this.TAB_INDEX;
             tabBar.choices.push({value:hsmTabIx, label:com_btactic_hsm_admin.zetaHSMTab});
 
-            var hsmAccountTab={
+            var hsmGlobalConfigTab={
                 type : _ZATABCASE_,
                 caseKey : hsmTabIx,
                 paddingStyle : "padding-left:15px;",
@@ -95,7 +95,7 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
                 ]
             };
 
-            xFormObject.items[i].items.push(hsmAccountTab);
+            xFormObject.items[i].items.push(hsmGlobalConfigTab);
         }
         ZaTabView.XFormModifiers["GlobalConfigXFormView"].push(com_btactic_hsm_ext.GlobalConfigXFormModifier);
     }
@@ -128,7 +128,7 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
             var hsmTabIx = ++this.TAB_INDEX;
             tabBar.choices.push({value:hsmTabIx, label:com_btactic_hsm_admin.zetaHSMTab});
 
-            var hsmAccountTab={
+            var hsmServerTab={
                 type : _ZATABCASE_,
                 caseKey : hsmTabIx,
                 paddingStyle : "padding-left:15px;",
@@ -177,7 +177,7 @@ if(ZaSettings && ZaSettings.EnabledZimlet["com_btactic_hsm_admin"]){
                 ]
             };
 
-            xFormObject.items[i].items.push(hsmAccountTab);
+            xFormObject.items[i].items.push(hsmServerTab);
         }
         ZaTabView.XFormModifiers["ZaServerXFormView"].push(com_btactic_hsm_ext.ServerXFormModifier);
     }
