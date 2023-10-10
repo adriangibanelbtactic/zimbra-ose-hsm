@@ -1,0 +1,6 @@
+build
+lib
+zetahsm.jar
+openjdk*
+java*
+out
