@@ -13,6 +13,14 @@ Usually it is used to move older data to slower-but-cheapear storages.
 
 This documentation is aimed at developers, not at admins.
 
+### How to build the extension
+
+- Check: [EXTENSION_BUILD.md](EXTENSION_BUILD.md) on how to build the Extension.
+
+### How to install the extension
+
+- Check: [EXTENSION_INSTALL.md](EXTENSION_INSTALL.md) on how to install the Extension.
+
 ### How to build the admin zimlet
 
 - Check: [ADMINZIMLET_BUILD.md](ADMINZIMLET_BUILD.md) on how to build the Administration Console Zimlet.
