@@ -31,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.MoreObjects;
 import com.zimbra.common.service.ServiceException;
-import com.btactic.hsm.AdminConstants;
 import com.zimbra.soap.admin.message.AutoProvTaskControlRequest.Action;
 import com.zimbra.soap.admin.type.IntIdAttr;
 

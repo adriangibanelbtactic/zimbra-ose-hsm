@@ -18,7 +18,7 @@ import com.zimbra.soap.DocumentDispatcher;
 import com.zimbra.soap.DocumentService;
 import com.zimbra.cs.service.admin.AdminService;
 
-import com.btactic.hsm.AdminConstants;
+import com.btactic.hsm.soap.AdminConstants;
 
 import com.btactic.hsm.soap.Hsm;
 
