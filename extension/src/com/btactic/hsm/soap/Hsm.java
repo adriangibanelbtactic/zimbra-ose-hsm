@@ -38,6 +38,7 @@ import com.zimbra.soap.JaxbUtil;
 import com.zimbra.soap.ZimbraSoapContext;
 
 import com.zimbra.cs.service.admin.AdminDocumentHandler;
+import com.zimbra.cs.service.admin.AdminRightCheckPoint;
 
 import com.btactic.hsm.ZetaHsm;
 
