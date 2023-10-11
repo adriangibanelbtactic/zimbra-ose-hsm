@@ -21,6 +21,10 @@ This documentation is aimed at developers, not at admins.
 
 - Check: [ADMINZIMLET_INSTALL.md](ADMINZIMLET_INSTALL.md) on how to install the Administration Console Zimlet.
 
+### How to install the zetahsm binary
+
+- Just copy `bin/zetahsm` it to: `/opt/zimbra/bin/zetahsm` with `root:root` ownership. Make sure it has `755` permissions.
+
 ## Licenses
 
 ### License (Extension)
