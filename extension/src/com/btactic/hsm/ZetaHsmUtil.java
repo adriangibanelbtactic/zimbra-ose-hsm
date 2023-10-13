@@ -35,8 +35,8 @@ import com.zimbra.common.soap.Element;
 import com.zimbra.common.util.CliUtil;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 import com.zimbra.soap.JaxbUtil;
-import com.btactic.hsm.soap.HsmRequest;
-import com.btactic.hsm.soap.HsmResponse;
+import com.btactic.hsm.soap.ZetaHsmRequest;
+import com.btactic.hsm.soap.ZetaHsmResponse;
 
 public class ZetaHsmUtil {
 
@@ -46,7 +46,7 @@ public class ZetaHsmUtil {
 
     private Options options;
     private boolean verbose = false;
-    private HsmRequest.HsmAction action;
+    private ZetaHsmRequest.HsmAction action;
 
     private ZetaHsmUtil() {
         options = new Options();
@@ -82,14 +82,14 @@ public class ZetaHsmUtil {
         if (cl.getArgs().length == 0) {
             usage(null);
         } else if  (cl.getArgs()[0].equals("stop")) {
-            action = HsmRequest.HsmAction.stop;
+            action = ZetaHsmRequest.HsmAction.stop;
         } else if (cl.getArgs()[0].equals("status")) {
-            action = HsmRequest.HsmAction.status;
+            action = ZetaHsmRequest.HsmAction.status;
         } else if (cl.getArgs()[0].equals("start")) {
-            action = HsmRequest.HsmAction.start;
+            action = ZetaHsmRequest.HsmAction.start;
         } else if (cl.getArgs()[0].equals("reset")) {
             if (CliUtil.confirm("This will remove all the metadata used by HSM process. Continue?")) {
-                action = HsmRequest.HsmAction.reset;
+                action = ZetaHsmRequest.HsmAction.reset;
             } else {
                 System.exit(0);
             }
@@ -104,10 +104,10 @@ public class ZetaHsmUtil {
         CliUtil.toolSetup();
         SoapProvisioning prov = SoapProvisioning.getAdminInstance();
         prov.soapZimbraAdminAuthenticate();
-        HsmRequest request = new HsmRequest(action);
+        ZetaHsmRequest request = new ZetaHsmRequest(action);
         Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request));
-        HsmResponse response = JaxbUtil.elementToJaxb(respElem);
-        if (action == HsmRequest.HsmAction.start) {
+        ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
+        if (action == ZetaHsmRequest.HsmAction.start) {
             System.out.println("ZetaHSM scheduled. Run \"zetahsmm status\" to check the status.");
         } else {
             System.out.println("Status = " + response.getStatus().name());

@@ -40,9 +40,7 @@ import com.zimbra.soap.ZimbraSoapContext;
 import com.zimbra.cs.service.admin.AdminDocumentHandler;
 import com.zimbra.cs.service.admin.AdminRightCheckPoint;
 
-import com.btactic.hsm.ZetaHsm;
-
-public final class Hsm extends AdminDocumentHandler {
+public final class ZetaHsm extends AdminDocumentHandler {
 
     @Override
     public Element handle(Element request, Map<String, Object> context) throws ServiceException {
@@ -53,31 +51,31 @@ public final class Hsm extends AdminDocumentHandler {
             throw ServiceException.INVALID_REQUEST(sm.getClass().getName()
                     + " is not supported", null);
         }
-        HsmRequest req = zsc.elementToJaxb(request);
-        ZetaHsm zetahsm = ZetaHsm.getInstance();
-        HsmResponse resp = new HsmResponse();
+        ZetaHsmRequest req = zsc.elementToJaxb(request);
+        com.btactic.hsm.ZetaHsm zetahsm = com.btactic.hsm.ZetaHsm.getInstance();
+        ZetaHsmResponse resp = new ZetaHsmResponse();
 
-        if ((req.getAction() == HsmRequest.HsmAction.start) ||
-                (req.getAction() == HsmRequest.HsmAction.reset)) {
+        if ((req.getAction() == ZetaHsmRequest.HsmAction.start) ||
+                (req.getAction() == ZetaHsmRequest.HsmAction.reset)) {
             // reset TODO
         }
-        if (req.getAction() == HsmRequest.HsmAction.start) {
+        if (req.getAction() == ZetaHsmRequest.HsmAction.start) {
                 try {
                     zetahsm.process();
                 } catch (IOException e) {
                     throw ServiceException.FAILURE("error while deduping", e);
                 }
-        } else if (req.getAction() == HsmRequest.HsmAction.stop) {
+        } else if (req.getAction() == ZetaHsmRequest.HsmAction.stop) {
             zetahsm.stopProcessing();
-        } else if (req.getAction() == HsmRequest.HsmAction.reset) {
+        } else if (req.getAction() == ZetaHsmRequest.HsmAction.reset) {
             // Reset TODO
         }
         // return the stats for all actions.
         boolean isRunning = zetahsm.isRunning();
         if (isRunning) {
-            resp.setStatus(HsmResponse.HsmStatus.running);
+            resp.setStatus(ZetaHsmResponse.HsmStatus.running);
         } else {
-            resp.setStatus(HsmResponse.HsmStatus.stopped);
+            resp.setStatus(ZetaHsmResponse.HsmStatus.stopped);
         }
 
         return zsc.jaxbToElement(resp);

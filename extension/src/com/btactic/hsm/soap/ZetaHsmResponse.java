@@ -30,7 +30,7 @@ import com.btactic.hsm.soap.AdminConstants;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name=AdminConstants.E_HSM_RESPONSE)
-public class HsmResponse {
+public class ZetaHsmResponse {
 
     @XmlEnum
     public static enum HsmStatus {
@@ -44,7 +44,7 @@ public class HsmResponse {
     @XmlAttribute(name=com.zimbra.common.soap.AdminConstants.A_STATUS, required=false)
     private HsmStatus status;
 
-    public HsmResponse() {
+    public ZetaHsmResponse() {
     }
 
     public void setStatus(HsmStatus status) {

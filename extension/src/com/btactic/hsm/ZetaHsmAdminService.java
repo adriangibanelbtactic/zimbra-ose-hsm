@@ -20,12 +20,12 @@ import com.zimbra.cs.service.admin.AdminService;
 
 import com.btactic.hsm.soap.AdminConstants;
 
-import com.btactic.hsm.soap.Hsm;
+import com.btactic.hsm.soap.ZetaHsm;
 
 public class ZetaHsmAdminService extends AdminService implements DocumentService {
 
     public void registerHandlers(DocumentDispatcher dispatcher) {
-        dispatcher.registerHandler(AdminConstants.HSM_REQUEST, new Hsm());
+        dispatcher.registerHandler(AdminConstants.HSM_REQUEST, new ZetaHsm());
     }
 
 }

@@ -41,7 +41,7 @@ import com.zimbra.soap.admin.type.IntIdAttr;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name=AdminConstants.E_HSM_REQUEST)
-public class HsmRequest {
+public class ZetaHsmRequest {
 
     @XmlEnum
     public static enum HsmAction {
@@ -69,11 +69,11 @@ public class HsmRequest {
      * no-argument constructor wanted by JAXB
      */
     @SuppressWarnings("unused")
-    private HsmRequest() {
+    private ZetaHsmRequest() {
         this((HsmAction)null);
     }
 
-    public HsmRequest(HsmAction action) {
+    public ZetaHsmRequest(HsmAction action) {
         this.action = action;
     }
 
