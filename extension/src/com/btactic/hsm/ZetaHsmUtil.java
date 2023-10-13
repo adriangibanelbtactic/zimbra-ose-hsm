@@ -83,10 +83,8 @@ public class ZetaHsmUtil {
             usage(null);
         } else if  (cl.getArgs()[0].equals("stop")) {
             action = HsmRequest.HsmAction.stop;
-            return;
         } else if (cl.getArgs()[0].equals("status")) {
             action = HsmRequest.HsmAction.status;
-            return;
         } else if (cl.getArgs()[0].equals("start")) {
             action = HsmRequest.HsmAction.start;
         } else if (cl.getArgs()[0].equals("reset")) {
