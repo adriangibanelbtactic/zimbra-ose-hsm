@@ -32,6 +32,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.zimbra.common.soap.Element;
+import com.zimbra.common.soap.Element.XMLElement;
 import com.zimbra.common.util.CliUtil;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 import com.zimbra.soap.JaxbUtil;
@@ -105,7 +106,7 @@ public class ZetaHsmUtil {
         SoapProvisioning prov = SoapProvisioning.getAdminInstance();
         prov.soapZimbraAdminAuthenticate();
         ZetaHsmRequest request = new ZetaHsmRequest(action);
-        Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request));
+        Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
         if (action == ZetaHsmRequest.HsmAction.start) {
             System.out.println("ZetaHSM scheduled. Run \"zetahsmm status\" to check the status.");
