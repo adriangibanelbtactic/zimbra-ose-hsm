@@ -106,7 +106,12 @@ public class ZetaHsmUtil {
         SoapProvisioning prov = SoapProvisioning.getAdminInstance();
         prov.soapZimbraAdminAuthenticate();
         ZetaHsmRequest request = new ZetaHsmRequest(action);
-        Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
+        Element tmpElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
+        System.out.println("DEBUG: BEGIN");
+        System.out.println(tmpElement.toString());
+        System.out.println("DEBUG: END");
+        Element respElem = prov.invoke(tmpElement);
+        // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
         if (action == ZetaHsmRequest.HsmAction.start) {
             System.out.println("ZetaHSM scheduled. Run \"zetahsmm status\" to check the status.");
