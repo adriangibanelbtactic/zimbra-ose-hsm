@@ -36,6 +36,7 @@ import com.zimbra.common.soap.Element.XMLElement;
 import com.zimbra.common.util.CliUtil;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 import com.zimbra.soap.JaxbUtil;
+import com.btactic.hsm.soap.AdminConstants;
 import com.btactic.hsm.soap.ZetaHsmRequest;
 import com.btactic.hsm.soap.ZetaHsmResponse;
 
@@ -126,7 +127,7 @@ public class ZetaHsmUtil {
         System.out.println(tmpElement4.toString());
         System.out.println("DEBUG: END4");
 
-        Element tmpElement5 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, true, true);
+        Element tmpElement5 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, true, true); // Por defecto
         System.out.println("DEBUG: BEGIN5");
         System.out.println(tmpElement5.toString());
         System.out.println("DEBUG: END5");
@@ -141,6 +142,13 @@ public class ZetaHsmUtil {
         System.out.println("DEBUG: BEGIN2");
         System.out.println(tmpElement.toString());
         System.out.println("DEBUG: END2");
+
+        tmpElement.setNamespace("", AdminConstants.HSM_REQUEST.getNamespaceURI());
+
+        System.out.println("DEBUG: BEGIN2.5");
+        System.out.println(tmpElement.toString());
+        System.out.println("DEBUG: END2.5");
+
         Element respElem = prov.invoke(tmpElement);
         // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
