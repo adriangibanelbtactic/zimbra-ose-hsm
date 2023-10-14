@@ -116,6 +116,26 @@ public class ZetaHsmUtil {
         System.out.println(tmpElement1.toString());
         System.out.println("DEBUG: END1");
 
+        Element tmpElement3 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, true, false);
+        System.out.println("DEBUG: BEGIN3");
+        System.out.println(tmpElement3.toString());
+        System.out.println("DEBUG: END3");
+
+        Element tmpElement4 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, false, false);
+        System.out.println("DEBUG: BEGIN4");
+        System.out.println(tmpElement4.toString());
+        System.out.println("DEBUG: END4");
+
+        Element tmpElement5 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, true, true);
+        System.out.println("DEBUG: BEGIN5");
+        System.out.println(tmpElement5.toString());
+        System.out.println("DEBUG: END5");
+
+        Element tmpElement6 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, false, true);
+        System.out.println("DEBUG: BEGIN6");
+        System.out.println(tmpElement6.toString());
+        System.out.println("DEBUG: END6");
+
         ZetaHsmRequest request = new ZetaHsmRequest(action);
         Element tmpElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, false, false);
         System.out.println("DEBUG: BEGIN2");
