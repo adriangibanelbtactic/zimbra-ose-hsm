@@ -110,7 +110,6 @@ public class ZetaHsmUtil {
 
         ZetaHsmRequest request = new ZetaHsmRequest(action);
         Element requestElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
-        requestElement.addAttribute("xmlns", "urn:zimbraAdmin"); // Workaround given that jaxbToElement is unalbe to add xmlns for us.
         Element respElem = prov.invoke(requestElement);
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
         if (action == ZetaHsmRequest.HsmAction.start) {
