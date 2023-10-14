@@ -144,15 +144,15 @@ public class ZetaHsmUtil {
         System.out.println(tmpElement.toString());
         System.out.println("DEBUG: END2");
 
+        tmpElement.addAttribute("xmlns", "urn:zimbraAdmin"); // Workaround
+        System.out.println("DEBUG: BEGIN2.2b");
+        System.out.println(tmpElement.toString());
+        System.out.println("DEBUG: END2.2b");
+
         Element tmpElement25 = JaxbUtil.jaxbToNamedElement(AdminConstants.E_HSM_REQUEST, AdminConstants.NAMESPACE_STR, request, XMLElement.mFactory);
         System.out.println("DEBUG: BEGIN2.5");
         System.out.println(tmpElement25.toString());
         System.out.println("DEBUG: END2.5");
-
-        Element tmpElement26 = JaxbUtil.jaxbToElement(request, SoapProtocol.SoapJS.getFactory());
-        System.out.println("DEBUG: BEGIN2.6");
-        System.out.println(tmpElement26.toString());
-        System.out.println("DEBUG: END2.6");
 
         Element respElem = prov.invoke(tmpElement);
         // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
