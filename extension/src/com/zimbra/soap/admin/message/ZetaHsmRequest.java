@@ -18,7 +18,7 @@
  * ***** END LICENSE BLOCK *****
  */
 
-package com.btactic.hsm.soap;
+package com.zimbra.soap.admin.message;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +33,8 @@ import com.google.common.base.MoreObjects;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.soap.admin.message.AutoProvTaskControlRequest.Action;
 import com.zimbra.soap.admin.type.IntIdAttr;
+
+import com.btactic.hsm.soap.AdminConstants;
 
 /**
  * @zm-api-command-auth-required true

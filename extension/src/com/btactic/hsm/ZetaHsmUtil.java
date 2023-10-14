@@ -38,8 +38,8 @@ import com.zimbra.common.util.CliUtil;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 import com.zimbra.soap.JaxbUtil;
 import com.btactic.hsm.soap.AdminConstants;
-import com.btactic.hsm.soap.ZetaHsmRequest;
-import com.btactic.hsm.soap.ZetaHsmResponse;
+import com.zimbra.soap.admin.message.ZetaHsmRequest;
+import com.zimbra.soap.admin.message.ZetaHsmResponse;
 
 public class ZetaHsmUtil {
 

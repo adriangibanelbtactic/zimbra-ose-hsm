@@ -40,6 +40,9 @@ import com.zimbra.soap.ZimbraSoapContext;
 import com.zimbra.cs.service.admin.AdminDocumentHandler;
 import com.zimbra.cs.service.admin.AdminRightCheckPoint;
 
+import com.zimbra.soap.admin.message.ZetaHsmRequest;
+import com.zimbra.soap.admin.message.ZetaHsmResponse;
+
 public final class ZetaHsm extends AdminDocumentHandler {
 
     @Override
