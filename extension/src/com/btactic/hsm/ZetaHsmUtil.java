@@ -39,6 +39,8 @@ import com.zimbra.soap.JaxbUtil;
 import com.btactic.hsm.soap.ZetaHsmRequest;
 import com.btactic.hsm.soap.ZetaHsmResponse;
 
+import com.zimbra.soap.admin.message.DedupeBlobsRequest;
+
 public class ZetaHsmUtil {
 
     private static final String LO_HELP = "help";
@@ -48,6 +50,7 @@ public class ZetaHsmUtil {
     private Options options;
     private boolean verbose = false;
     private ZetaHsmRequest.HsmAction action;
+    private DedupeBlobsRequest.DedupAction daction;
 
     private ZetaHsmUtil() {
         options = new Options();
@@ -86,6 +89,7 @@ public class ZetaHsmUtil {
             action = ZetaHsmRequest.HsmAction.stop;
         } else if (cl.getArgs()[0].equals("status")) {
             action = ZetaHsmRequest.HsmAction.status;
+            daction = DedupeBlobsRequest.DedupAction.status;
         } else if (cl.getArgs()[0].equals("start")) {
             action = ZetaHsmRequest.HsmAction.start;
         } else if (cl.getArgs()[0].equals("reset")) {
@@ -105,11 +109,18 @@ public class ZetaHsmUtil {
         CliUtil.toolSetup();
         SoapProvisioning prov = SoapProvisioning.getAdminInstance();
         prov.soapZimbraAdminAuthenticate();
+
+        DedupeBlobsRequest request1 = new DedupeBlobsRequest(daction);
+        Element tmpElement1 = JaxbUtil.jaxbToElement(request1);
+        System.out.println("DEBUG: BEGIN1");
+        System.out.println(tmpElement1.toString());
+        System.out.println("DEBUG: END1");
+
         ZetaHsmRequest request = new ZetaHsmRequest(action);
         Element tmpElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, false, false);
-        System.out.println("DEBUG: BEGIN");
+        System.out.println("DEBUG: BEGIN2");
         System.out.println(tmpElement.toString());
-        System.out.println("DEBUG: END");
+        System.out.println("DEBUG: END2");
         Element respElem = prov.invoke(tmpElement);
         // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
