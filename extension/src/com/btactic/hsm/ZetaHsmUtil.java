@@ -143,10 +143,9 @@ public class ZetaHsmUtil {
         System.out.println(tmpElement.toString());
         System.out.println("DEBUG: END2");
 
-        tmpElement.setNamespace("", AdminConstants.HSM_REQUEST.getNamespaceURI());
-
+        Element tmpElement25 = JaxbUtil.jaxbToNamedElement(AdminConstants.E_HSM_REQUEST, AdminConstants.NAMESPACE_STR, request, XMLElement.mFactory);
         System.out.println("DEBUG: BEGIN2.5");
-        System.out.println(tmpElement.toString());
+        System.out.println(tmpElement25.toString());
         System.out.println("DEBUG: END2.5");
 
         Element respElem = prov.invoke(tmpElement);
