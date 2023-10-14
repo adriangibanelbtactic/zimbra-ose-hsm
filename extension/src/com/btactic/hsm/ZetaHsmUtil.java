@@ -33,6 +33,7 @@ import org.apache.commons.cli.ParseException;
 
 import com.zimbra.common.soap.Element;
 import com.zimbra.common.soap.Element.XMLElement;
+import com.zimbra.common.soap.SoapProtocol;
 import com.zimbra.common.util.CliUtil;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 import com.zimbra.soap.JaxbUtil;
@@ -147,6 +148,11 @@ public class ZetaHsmUtil {
         System.out.println("DEBUG: BEGIN2.5");
         System.out.println(tmpElement25.toString());
         System.out.println("DEBUG: END2.5");
+
+        Element tmpElement26 = JaxbUtil.jaxbToElement(request, SoapProtocol.SoapJS.getFactory());
+        System.out.println("DEBUG: BEGIN2.6");
+        System.out.println(tmpElement26.toString());
+        System.out.println("DEBUG: END2.6");
 
         Element respElem = prov.invoke(tmpElement);
         // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
