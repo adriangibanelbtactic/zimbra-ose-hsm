@@ -109,6 +109,13 @@ public class ZetaHsmUtil {
         prov.soapZimbraAdminAuthenticate();
 
         ZetaHsmRequest request = new ZetaHsmRequest(action);
+        // Setting:
+        //  removePrefixes to true
+        //  useContextMarshaller to false
+        // and passing a class inside the com.zimbra.soap.admin.message package
+        // (classes that you can make yourself in the Extension)
+        // let's you use this JaxbUtil.jaxbToElement method to send Soap queries to the
+        // zimbraAdmin endpoint quite nicely.
         Element requestElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
         Element respElem = prov.invoke(requestElement);
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
