@@ -109,18 +109,9 @@ public class ZetaHsmUtil {
         prov.soapZimbraAdminAuthenticate();
 
         ZetaHsmRequest request = new ZetaHsmRequest(action);
-        Element tmpElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
-        System.out.println("DEBUG: BEGIN2");
-        System.out.println(tmpElement.toString());
-        System.out.println("DEBUG: END2");
-
-        tmpElement.addAttribute("xmlns", "urn:zimbraAdmin"); // Workaround
-        System.out.println("DEBUG: BEGIN2.2b");
-        System.out.println(tmpElement.toString());
-        System.out.println("DEBUG: END2.2b");
-
-        Element respElem = prov.invoke(tmpElement);
-        // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
+        Element requestElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
+        requestElement.addAttribute("xmlns", "urn:zimbraAdmin"); // Workaround given that jaxbToElement is unalbe to add xmlns for us.
+        Element respElem = prov.invoke(requestElement);
         ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
         if (action == ZetaHsmRequest.HsmAction.start) {
             System.out.println("ZetaHSM scheduled. Run \"zetahsmm status\" to check the status.");
