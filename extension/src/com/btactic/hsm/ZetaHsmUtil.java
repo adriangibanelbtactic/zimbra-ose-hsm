@@ -41,8 +41,6 @@ import com.btactic.hsm.soap.AdminConstants;
 import com.btactic.hsm.soap.ZetaHsmRequest;
 import com.btactic.hsm.soap.ZetaHsmResponse;
 
-import com.zimbra.soap.admin.message.DedupeBlobsRequest;
-
 public class ZetaHsmUtil {
 
     private static final String LO_HELP = "help";
@@ -52,7 +50,6 @@ public class ZetaHsmUtil {
     private Options options;
     private boolean verbose = false;
     private ZetaHsmRequest.HsmAction action;
-    private DedupeBlobsRequest.DedupAction daction;
 
     private ZetaHsmUtil() {
         options = new Options();
@@ -91,7 +88,6 @@ public class ZetaHsmUtil {
             action = ZetaHsmRequest.HsmAction.stop;
         } else if (cl.getArgs()[0].equals("status")) {
             action = ZetaHsmRequest.HsmAction.status;
-            daction = DedupeBlobsRequest.DedupAction.status;
         } else if (cl.getArgs()[0].equals("start")) {
             action = ZetaHsmRequest.HsmAction.start;
         } else if (cl.getArgs()[0].equals("reset")) {
@@ -112,34 +108,8 @@ public class ZetaHsmUtil {
         SoapProvisioning prov = SoapProvisioning.getAdminInstance();
         prov.soapZimbraAdminAuthenticate();
 
-        DedupeBlobsRequest request1 = new DedupeBlobsRequest(daction);
-        Element tmpElement1 = JaxbUtil.jaxbToElement(request1);
-        System.out.println("DEBUG: BEGIN1");
-        System.out.println(tmpElement1.toString());
-        System.out.println("DEBUG: END1");
-
-        Element tmpElement3 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, true, false);
-        System.out.println("DEBUG: BEGIN3");
-        System.out.println(tmpElement3.toString());
-        System.out.println("DEBUG: END3");
-
-        Element tmpElement4 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, false, false);
-        System.out.println("DEBUG: BEGIN4");
-        System.out.println(tmpElement4.toString());
-        System.out.println("DEBUG: END4");
-
-        Element tmpElement5 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, true, true); // Por defecto
-        System.out.println("DEBUG: BEGIN5");
-        System.out.println(tmpElement5.toString());
-        System.out.println("DEBUG: END5");
-
-        Element tmpElement6 = JaxbUtil.jaxbToElement(request1, XMLElement.mFactory, false, true);
-        System.out.println("DEBUG: BEGIN6");
-        System.out.println(tmpElement6.toString());
-        System.out.println("DEBUG: END6");
-
         ZetaHsmRequest request = new ZetaHsmRequest(action);
-        Element tmpElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, false, false);
+        Element tmpElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
         System.out.println("DEBUG: BEGIN2");
         System.out.println(tmpElement.toString());
         System.out.println("DEBUG: END2");
@@ -148,11 +118,6 @@ public class ZetaHsmUtil {
         System.out.println("DEBUG: BEGIN2.2b");
         System.out.println(tmpElement.toString());
         System.out.println("DEBUG: END2.2b");
-
-        Element tmpElement25 = JaxbUtil.jaxbToNamedElement(AdminConstants.E_HSM_REQUEST, AdminConstants.NAMESPACE_STR, request, XMLElement.mFactory);
-        System.out.println("DEBUG: BEGIN2.5");
-        System.out.println(tmpElement25.toString());
-        System.out.println("DEBUG: END2.5");
 
         Element respElem = prov.invoke(tmpElement);
         // Element respElem = prov.invoke(JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false));
