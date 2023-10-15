@@ -118,7 +118,8 @@ public class ZetaHsmUtil {
         // zimbraAdmin endpoint quite nicely.
         Element requestElement = JaxbUtil.jaxbToElement(request, XMLElement.mFactory, true, false);
         Element respElem = prov.invoke(requestElement);
-        ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem);
+        // Workaround in order to be able to use elementToJaxb with non standard Zimbra classes
+        ZetaHsmResponse response = JaxbUtil.elementToJaxb(respElem, ZetaHsmResponse.class);
         if (action == ZetaHsmRequest.HsmAction.start) {
             System.out.println("ZetaHSM scheduled. Run \"zetahsmm status\" to check the status.");
         } else {
