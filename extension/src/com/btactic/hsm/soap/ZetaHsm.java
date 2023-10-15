@@ -54,7 +54,7 @@ public final class ZetaHsm extends AdminDocumentHandler {
             throw ServiceException.INVALID_REQUEST(sm.getClass().getName()
                     + " is not supported", null);
         }
-        ZetaHsmRequest req = zsc.elementToJaxb(request);
+        ZetaHsmRequest req = JaxbUtil.elementToJaxb(request, ZetaHsmRequest.class);
         com.btactic.hsm.ZetaHsm zetahsm = com.btactic.hsm.ZetaHsm.getInstance();
         ZetaHsmResponse resp = new ZetaHsmResponse();
 
