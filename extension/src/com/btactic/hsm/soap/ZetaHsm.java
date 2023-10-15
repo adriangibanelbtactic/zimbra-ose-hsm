@@ -56,6 +56,7 @@ public final class ZetaHsm extends AdminDocumentHandler {
                     + " is not supported", null);
         }
         // Workaround in order to be able to use elementToJaxb with non standard Zimbra classes
+        // Make sure your custom Request class is inside the com.zimbra.soap.admin.message package
         ZetaHsmRequest req = JaxbUtil.elementToJaxb(request, ZetaHsmRequest.class);
         com.btactic.hsm.ZetaHsm zetahsm = com.btactic.hsm.ZetaHsm.getInstance();
         ZetaHsmResponse resp = new ZetaHsmResponse();
