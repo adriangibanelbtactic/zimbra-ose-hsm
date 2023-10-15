@@ -27,6 +27,7 @@ import java.util.Map;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.soap.Element;
+import com.zimbra.common.soap.Element.XMLElement;
 import com.zimbra.common.util.Pair;
 import com.zimbra.cs.account.accesscontrol.AdminRight;
 import com.zimbra.cs.store.StoreManager;
@@ -81,7 +82,14 @@ public final class ZetaHsm extends AdminDocumentHandler {
             resp.setStatus(ZetaHsmResponse.HsmStatus.stopped);
         }
 
-        return zsc.jaxbToElement(resp);
+        // Setting:
+        //  removePrefixes to true
+        //  useContextMarshaller to false
+        // and passing a class inside the com.zimbra.soap.admin.message package
+        // (classes that you can make yourself in the Extension)
+        // let's you use this JaxbUtil.jaxbToElement method to reply Soap queries from the
+        // zimbraAdmin endpoint quite nicely.
+        return JaxbUtil.jaxbToElement(resp, XMLElement.mFactory, true, false);
     }
 
     @Override
