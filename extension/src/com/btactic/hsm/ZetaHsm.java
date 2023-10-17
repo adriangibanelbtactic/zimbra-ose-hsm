@@ -25,6 +25,10 @@ import java.io.IOException;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.mailbox.MailServiceException;
+import com.zimbra.cs.account.Provisioning;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class ZetaHsm {
 
@@ -81,6 +85,35 @@ public class ZetaHsm {
             // TODO: Sleep 1 minute as a proof of concept
             resetProgress();
             ZimbraLog.misc.info("DEBUG: ZetaHsm RUN function was run.");
+            try {
+                String[] zimbraHsmPolicyList = Provisioning.getInstance().getLocalServer().getMultiAttr("zimbraHsmPolicy");
+
+                if (zimbraHsmPolicyList.length == 0) {
+                    ZimbraLog.misc.info("'zimbraHsmPolicy' attribute is empty. Nothing to do. Aborting.");
+                    return;
+                }
+
+                boolean validHsmPolicySyntaxList = true;
+                for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
+                    Pattern hsmPolicyPattern = Pattern.compile("^(message|document|task|appointment|contact)(,(message|document|task|appointment|contact))*:(?<hsmSearch>.+)$");
+                    Matcher hsmPolicyMatcher = hsmPolicyPattern.matcher(nZimbraHsmPolicy);
+                    boolean validHsmPolicySyntax = hsmPolicyMatcher.matches();
+                    if (!(validHsmPolicySyntax)) {
+                        validHsmPolicySyntaxList = false;
+                        ZimbraLog.misc.error("zimbraHsmPolicy: '" + nZimbraHsmPolicy + "' syntax is not valid!");
+                    }
+                }
+
+                if (!(validHsmPolicySyntaxList)) {
+                    ZimbraLog.misc.error("One or more of the 'zimbraHsmPolicy' values does not have a valid syntax. Aborting.");
+                    return;
+                }
+
+            }
+            catch (ServiceException e) {
+                ZimbraLog.misc.info("Unable to get 'zimbraHsmPolicy' attribute. Aborting.");
+                return;
+            }
         }
     }
 }
