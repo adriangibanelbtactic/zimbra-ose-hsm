@@ -25,6 +25,7 @@ import java.io.IOException;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.mailbox.MailServiceException;
+import com.zimbra.cs.account.Provisioning;
 
 public class ZetaHsm {
 
@@ -81,6 +82,17 @@ public class ZetaHsm {
             // TODO: Sleep 1 minute as a proof of concept
             resetProgress();
             ZimbraLog.misc.info("DEBUG: ZetaHsm RUN function was run.");
+            try {
+                String[] zimbraHsmPolicyList = Provisioning.getInstance().getLocalServer().getMultiAttr("zimbraHsmPolicy");
+
+                for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
+                    System.out.println(nZimbraHsmPolicy);
+                }
+            }
+            catch (ServiceException e) {
+                ZimbraLog.misc.info("Unable to get 'zimbraHsmPolicy' attribute. Aborting.");
+                return;
+            }
         }
     }
 }
