@@ -85,6 +85,11 @@ public class ZetaHsm {
             try {
                 String[] zimbraHsmPolicyList = Provisioning.getInstance().getLocalServer().getMultiAttr("zimbraHsmPolicy");
 
+                if (zimbraHsmPolicyList.length == 0) {
+                    ZimbraLog.misc.info("'zimbraHsmPolicy' attribute is empty. Nothing to do. Aborting.");
+                    return;
+                }
+
                 for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
                     System.out.println(nZimbraHsmPolicy);
                 }
