@@ -27,6 +27,9 @@ import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.mailbox.MailServiceException;
 import com.zimbra.cs.account.Provisioning;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 public class ZetaHsm {
 
     private boolean inProgress = false;
@@ -88,6 +91,13 @@ public class ZetaHsm {
                 if (zimbraHsmPolicyList.length == 0) {
                     ZimbraLog.misc.info("'zimbraHsmPolicy' attribute is empty. Nothing to do. Aborting.");
                     return;
+                }
+
+                for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
+                    Pattern hsmPolicyPattern = Pattern.compile("^(message|document|task|appointment|contact)(,(message|document|task|appointment|contact))*:(?<hsmSearch>.+)$");
+                    Matcher hsmPolicyMatcher = hsmPolicyPattern.matcher(nZimbraHsmPolicy);
+                    boolean validHsmPolicySyntax = hsmPolicyMatcher.matches();
+                    ZimbraLog.misc.info("DEBUG: Is: '" + nZimbraHsmPolicy + "' policy a valid one? " + ( validHsmPolicySyntax ? "Yes!" : "No!") );
                 }
 
             }
