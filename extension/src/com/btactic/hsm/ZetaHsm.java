@@ -93,11 +93,20 @@ public class ZetaHsm {
                     return;
                 }
 
+                boolean validHsmPolicySyntaxList = true;
                 for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
                     Pattern hsmPolicyPattern = Pattern.compile("^(message|document|task|appointment|contact)(,(message|document|task|appointment|contact))*:(?<hsmSearch>.+)$");
                     Matcher hsmPolicyMatcher = hsmPolicyPattern.matcher(nZimbraHsmPolicy);
                     boolean validHsmPolicySyntax = hsmPolicyMatcher.matches();
-                    ZimbraLog.misc.info("DEBUG: Is: '" + nZimbraHsmPolicy + "' policy a valid one? " + ( validHsmPolicySyntax ? "Yes!" : "No!") );
+                    if (!(validHsmPolicySyntax)) {
+                        validHsmPolicySyntaxList = false;
+                        ZimbraLog.misc.error("zimbraHsmPolicy: '" + nZimbraHsmPolicy + "' syntax is not valid!");
+                    }
+                }
+
+                if (!(validHsmPolicySyntaxList)) {
+                    ZimbraLog.misc.error("One or more of the 'zimbraHsmPolicy' values does not have a valid syntax. Aborting.");
+                    return;
                 }
 
             }
