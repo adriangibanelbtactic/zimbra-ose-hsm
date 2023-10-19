@@ -90,9 +90,6 @@ public class ZetaHsm {
                     return;
                 }
 
-                for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
-                    System.out.println(nZimbraHsmPolicy);
-                }
             }
             catch (ServiceException e) {
                 ZimbraLog.misc.info("Unable to get 'zimbraHsmPolicy' attribute. Aborting.");
