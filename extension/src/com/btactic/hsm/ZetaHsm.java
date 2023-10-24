@@ -24,8 +24,17 @@ import java.io.IOException;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ZimbraLog;
+
+import com.zimbra.common.soap.AdminConstants;
+import com.zimbra.common.soap.Element;
+import com.zimbra.common.soap.Element.XMLElement;
+
 import com.zimbra.cs.mailbox.MailServiceException;
 import com.zimbra.cs.account.Provisioning;
+import com.zimbra.cs.account.soap.SoapProvisioning;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -78,6 +87,19 @@ public class ZetaHsm {
 
     private class ZetaHsmThread extends Thread {
 
+        private List<Integer> mailboxIds;
+
+        private List<Integer> getAllMailboxIds(SoapProvisioning prov)
+        throws ServiceException {
+            List<Integer> ids = new ArrayList<Integer>();
+            XMLElement request = new XMLElement(AdminConstants.GET_ALL_MAILBOXES_REQUEST);
+            Element response = prov.invoke(request);
+            for (Element mboxEl : response.listElements(AdminConstants.E_MAILBOX)) {
+                ids.add((int) mboxEl.getAttributeLong(AdminConstants.A_ID));
+            }
+            return ids;
+        }
+
         public ZetaHsmThread() {
         }
 
@@ -109,6 +131,14 @@ public class ZetaHsm {
                 if (!(validHsmPolicySyntaxList)) {
                     ZimbraLog.misc.error("One or more of the 'zimbraHsmPolicy' values does not have a valid syntax. Aborting.");
                     return;
+                }
+
+                SoapProvisioning prov = SoapProvisioning.getAdminInstance();
+                prov.soapZimbraAdminAuthenticate();
+                mailboxIds = getAllMailboxIds(prov);
+
+                for (int mboxId : mailboxIds) {
+                    ZimbraLog.misc.info("DEBUG: mailbox: " + mboxId + " " + ".");
                 }
 
             }
