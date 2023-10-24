@@ -102,6 +102,8 @@ public class ZetaHsm {
                         validHsmPolicySyntaxList = false;
                         ZimbraLog.misc.error("zimbraHsmPolicy: '" + nZimbraHsmPolicy + "' syntax is not valid!");
                     }
+                    // TODO: Check also if the search is valid or not at this point
+                    // TODO: Seems quite difficult to implement because you usually need an actual mailbox for testing it
                 }
 
                 if (!(validHsmPolicySyntaxList)) {
