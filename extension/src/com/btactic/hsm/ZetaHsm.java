@@ -25,13 +25,19 @@ import java.io.IOException;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ZimbraLog;
 
-import com.zimbra.common.soap.AdminConstants;
 import com.zimbra.common.soap.Element;
 import com.zimbra.common.soap.Element.XMLElement;
 
 import com.zimbra.cs.mailbox.MailServiceException;
 import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.account.soap.SoapProvisioning;
+
+import com.zimbra.soap.admin.message.GetAllMailboxesRequest;
+import com.zimbra.soap.admin.message.GetAllMailboxesResponse;
+
+import com.zimbra.soap.admin.type.MailboxInfo;
+
+import com.zimbra.soap.JaxbUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,10 +98,12 @@ public class ZetaHsm {
         private List<Integer> getAllMailboxIds(SoapProvisioning prov)
         throws ServiceException {
             List<Integer> ids = new ArrayList<Integer>();
-            XMLElement request = new XMLElement(AdminConstants.GET_ALL_MAILBOXES_REQUEST);
-            Element response = prov.invoke(request);
-            for (Element mboxEl : response.listElements(AdminConstants.E_MAILBOX)) {
-                ids.add((int) mboxEl.getAttributeLong(AdminConstants.A_ID));
+            GetAllMailboxesRequest request = new GetAllMailboxesRequest();
+            Element requestElement = JaxbUtil.jaxbToElement(request);
+            Element respElem = prov.invoke(requestElement);
+            GetAllMailboxesResponse response = JaxbUtil.elementToJaxb(respElem);
+            for (MailboxInfo mailboxInfo : response.getMboxes()) {
+                ids.add(mailboxInfo.getId());
             }
             return ids;
         }
