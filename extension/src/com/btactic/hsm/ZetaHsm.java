@@ -33,18 +33,12 @@ import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 import com.zimbra.cs.volume.Volume;
 
-import com.zimbra.soap.admin.message.GetAllMailboxesRequest;
-import com.zimbra.soap.admin.message.GetAllMailboxesResponse;
 import com.zimbra.soap.admin.message.GetAllVolumesRequest;
 import com.zimbra.soap.admin.message.GetAllVolumesResponse;
 
-import com.zimbra.soap.admin.type.MailboxInfo;
 import com.zimbra.soap.admin.type.VolumeInfo;
 
 import com.zimbra.soap.JaxbUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -96,21 +90,6 @@ public class ZetaHsm {
     }
 
     private class ZetaHsmThread extends Thread {
-
-        private List<Integer> mailboxIds;
-
-        private List<Integer> getAllMailboxIds(SoapProvisioning prov)
-        throws ServiceException {
-            List<Integer> ids = new ArrayList<Integer>();
-            GetAllMailboxesRequest request = new GetAllMailboxesRequest();
-            Element requestElement = JaxbUtil.jaxbToElement(request);
-            Element respElem = prov.invoke(requestElement);
-            GetAllMailboxesResponse response = JaxbUtil.elementToJaxb(respElem);
-            for (MailboxInfo mailboxInfo : response.getMboxes()) {
-                ids.add(mailboxInfo.getId());
-            }
-            return ids;
-        }
 
         private boolean isValidHsmPolicySyntaxList(String[] zimbraHsmPolicyList) {
             boolean validHsmPolicySyntaxList = true;
@@ -205,8 +184,6 @@ public class ZetaHsm {
 
                 ZimbraLog.misc.info("DEBUG: destinationVolumeId: " + destinationVolumeId);
 
-                mailboxIds = getAllMailboxIds(prov);
-
                 int zimbraHsmPolicyCounter = 0;
                 for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
                     zimbraHsmPolicyCounter = zimbraHsmPolicyCounter + 1 ;
@@ -218,12 +195,9 @@ public class ZetaHsm {
                     ZimbraLog.misc.info("DEBUG: hsmTypesString - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length + ")" + " : '" + hsmTypesString + "'");
                     ZimbraLog.misc.info("DEBUG: hsmSearchQueryString - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length + ")" + " : '" + hsmSearchQueryString + "'");
 
-                    for (int mboxId : mailboxIds) {
-                        ZimbraLog.misc.info("DEBUG: mailbox: " + mboxId + " - ZimbraHsmPolicy - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length +")" + " '" + nZimbraHsmPolicy + "' " + ".");
-                    }
+                    BlobMover blobMover = new BlobMover();
+                    blobMover.moveItems(prov, hsmTypesString, hsmSearchQueryString, destinationVolumeId);
                 }
-
-
             }
             catch (ServiceException e) {
                 ZimbraLog.misc.info("Unable to get 'zimbraHsmPolicy' attribute. Aborting.");
