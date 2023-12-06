@@ -128,6 +128,26 @@ public class ZetaHsm {
             return validHsmPolicySyntaxList;
         }
 
+        private String getHsmTypesStringFromHsmPolicy (String zimbraHsmPolicy){
+            String hsmTypesString = null;
+            Pattern hsmPolicySplitPattern = Pattern.compile("^(?<hsmTypes>.*?):(?<hsmSearchQuery>.*)$");
+            Matcher hsmPolicySplitMatcher = hsmPolicySplitPattern.matcher(zimbraHsmPolicy);
+            if (hsmPolicySplitMatcher.find()) {
+                hsmTypesString = hsmPolicySplitMatcher.group("hsmTypes");
+            }
+            return hsmTypesString;
+        }
+
+        private String getHsmSearchQueryStringFromHsmPolicy (String zimbraHsmPolicy){
+            String hsmSearchQueryString = null;
+            Pattern hsmPolicySplitPattern = Pattern.compile("^(?<hsmTypes>.*?):(?<hsmSearchQuery>.*)$");
+            Matcher hsmPolicySplitMatcher = hsmPolicySplitPattern.matcher(zimbraHsmPolicy);
+            if (hsmPolicySplitMatcher.find()) {
+                hsmSearchQueryString = hsmPolicySplitMatcher.group("hsmSearchQuery");
+            }
+            return hsmSearchQueryString;
+        }
+
         private short getDestinationVolumeId(SoapProvisioning prov) throws ServiceException {
             short destinationVolumeId = -1;
 
@@ -190,6 +210,14 @@ public class ZetaHsm {
                 int zimbraHsmPolicyCounter = 0;
                 for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
                     zimbraHsmPolicyCounter = zimbraHsmPolicyCounter + 1 ;
+
+                    String hsmTypesString = getHsmTypesStringFromHsmPolicy(nZimbraHsmPolicy);
+                    String hsmSearchQueryString = getHsmSearchQueryStringFromHsmPolicy(nZimbraHsmPolicy);
+                    // No need to check if the values are null because of prior isValidHsmPolicySyntaxList check
+
+                    ZimbraLog.misc.info("DEBUG: hsmTypesString - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length + ")" + " : '" + hsmTypesString + "'");
+                    ZimbraLog.misc.info("DEBUG: hsmSearchQueryString - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length + ")" + " : '" + hsmSearchQueryString + "'");
+
                     for (int mboxId : mailboxIds) {
                         ZimbraLog.misc.info("DEBUG: mailbox: " + mboxId + " - ZimbraHsmPolicy - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length +")" + " '" + nZimbraHsmPolicy + "' " + ".");
                     }
