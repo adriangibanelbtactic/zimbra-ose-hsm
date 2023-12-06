@@ -31,11 +31,15 @@ import com.zimbra.common.soap.Element.XMLElement;
 import com.zimbra.cs.mailbox.MailServiceException;
 import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.account.soap.SoapProvisioning;
+import com.zimbra.cs.volume.Volume;
 
 import com.zimbra.soap.admin.message.GetAllMailboxesRequest;
 import com.zimbra.soap.admin.message.GetAllMailboxesResponse;
+import com.zimbra.soap.admin.message.GetAllVolumesRequest;
+import com.zimbra.soap.admin.message.GetAllVolumesResponse;
 
 import com.zimbra.soap.admin.type.MailboxInfo;
+import com.zimbra.soap.admin.type.VolumeInfo;
 
 import com.zimbra.soap.JaxbUtil;
 
@@ -108,6 +112,32 @@ public class ZetaHsm {
             return ids;
         }
 
+        private short getDestinationVolumeId(SoapProvisioning prov) throws ServiceException {
+            short destinationVolumeId = -1;
+
+            GetAllVolumesRequest request = new GetAllVolumesRequest();
+            Element requestElement = JaxbUtil.jaxbToElement(request);
+            Element respElem = prov.invoke(requestElement);
+            GetAllVolumesResponse response = JaxbUtil.elementToJaxb(respElem);
+            for (VolumeInfo volumeInfo : response.getVolumes()) {
+                if (
+                       // TODO: Make sure to use this in ZCS 10 and ?ZCS9?
+                       // Not sure it's worth using reflection here
+                       // in order to have an unique codebase.
+                       // Related commit on zm-mailbox: 6e01a80383a9c8a3a1f94831c48c8309c177bbb0
+                       //
+                       // (volumeInfo.getStoreType() == Volume.StoreType.INTERNAL) &&
+                       // volumeInfo.getStoreManagerClass() == 'WhateverMakesSense'
+                       (volumeInfo.isCurrent()) &&
+                       (volumeInfo.getType() == Volume.TYPE_MESSAGE_SECONDARY)
+                   ) {
+                       destinationVolumeId = volumeInfo.getId();
+                }
+            }
+
+            return destinationVolumeId;
+        }
+
         public ZetaHsmThread() {
         }
 
@@ -143,6 +173,15 @@ public class ZetaHsm {
 
                 SoapProvisioning prov = SoapProvisioning.getAdminInstance();
                 prov.soapZimbraAdminAuthenticate();
+
+                short destinationVolumeId = getDestinationVolumeId(prov);
+                if (destinationVolumeId == -1) {
+                    ZimbraLog.misc.error("We did not find an expected (Secondary, internal and current) destination volume. Aborting.");
+                    return;
+                }
+
+                ZimbraLog.misc.info("DEBUG: destinationVolumeId: " + destinationVolumeId);
+
                 mailboxIds = getAllMailboxIds(prov);
 
                 for (int mboxId : mailboxIds) {
