@@ -187,13 +187,14 @@ public class ZetaHsm {
 
                 mailboxIds = getAllMailboxIds(prov);
 
-                for (int mboxId : mailboxIds) {
                     int zimbraHsmPolicyCounter = 0;
                     for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
                         zimbraHsmPolicyCounter = zimbraHsmPolicyCounter + 1 ;
+                for (int mboxId : mailboxIds) {
                         ZimbraLog.misc.info("DEBUG: mailbox: " + mboxId + " - ZimbraHsmPolicy - (" + zimbraHsmPolicyCounter + "/" + zimbraHsmPolicyList.length +")" + " '" + nZimbraHsmPolicy + "' " + ".");
-                    }
                 }
+                    }
+
 
             }
             catch (ServiceException e) {
