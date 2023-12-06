@@ -112,6 +112,22 @@ public class ZetaHsm {
             return ids;
         }
 
+        private boolean isValidHsmPolicySyntaxList(String[] zimbraHsmPolicyList) {
+            boolean validHsmPolicySyntaxList = true;
+            for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
+                Pattern hsmPolicyPattern = Pattern.compile("^(message|document|task|appointment|contact)(,(message|document|task|appointment|contact))*:(?<hsmSearch>.+)$");
+                Matcher hsmPolicyMatcher = hsmPolicyPattern.matcher(nZimbraHsmPolicy);
+                boolean validHsmPolicySyntax = hsmPolicyMatcher.matches();
+                if (!(validHsmPolicySyntax)) {
+                    validHsmPolicySyntaxList = false;
+                    ZimbraLog.misc.error("zimbraHsmPolicy: '" + nZimbraHsmPolicy + "' syntax is not valid!");
+                }
+                // TODO: Check also if the search is valid or not at this point
+                // TODO: Seems quite difficult to implement because you usually need an actual mailbox for testing it
+            }
+            return validHsmPolicySyntaxList;
+        }
+
         private short getDestinationVolumeId(SoapProvisioning prov) throws ServiceException {
             short destinationVolumeId = -1;
 
@@ -153,20 +169,7 @@ public class ZetaHsm {
                     return;
                 }
 
-                boolean validHsmPolicySyntaxList = true;
-                for (String nZimbraHsmPolicy: zimbraHsmPolicyList) {
-                    Pattern hsmPolicyPattern = Pattern.compile("^(message|document|task|appointment|contact)(,(message|document|task|appointment|contact))*:(?<hsmSearch>.+)$");
-                    Matcher hsmPolicyMatcher = hsmPolicyPattern.matcher(nZimbraHsmPolicy);
-                    boolean validHsmPolicySyntax = hsmPolicyMatcher.matches();
-                    if (!(validHsmPolicySyntax)) {
-                        validHsmPolicySyntaxList = false;
-                        ZimbraLog.misc.error("zimbraHsmPolicy: '" + nZimbraHsmPolicy + "' syntax is not valid!");
-                    }
-                    // TODO: Check also if the search is valid or not at this point
-                    // TODO: Seems quite difficult to implement because you usually need an actual mailbox for testing it
-                }
-
-                if (!(validHsmPolicySyntaxList)) {
+                if (!(isValidHsmPolicySyntaxList(zimbraHsmPolicyList))) {
                     ZimbraLog.misc.error("One or more of the 'zimbraHsmPolicy' values does not have a valid syntax. Aborting.");
                     return;
                 }
