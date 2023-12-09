@@ -64,6 +64,13 @@ public class BlobMover {
         return ids;
     }
 
+    private void filterAndAddToFilteredItemIds (List<Integer> zimbraQueryPreFilterItemsChunk, List<Integer> zimbraQueryPostFilterItems) {
+        if (!(zimbraQueryPreFilterItemsChunk.isEmpty())) {
+            zimbraQueryPostFilterItems.addAll(zimbraQueryPreFilterItemsChunk);
+        }
+        // TODO: Do the actual filter
+    }
+
     public void moveItems(SoapProvisioning prov, String hsmTypesString, String hsmSearchQueryString, short destinationVolumeId) throws ServiceException {
         DbConnection conn = null;
         try {
@@ -83,10 +90,27 @@ public class BlobMover {
 
                 ZimbraQuery query = new ZimbraQuery(new OperationContext(mbox), SoapProtocol.Soap12, mbox, params);
                 ZimbraQueryResults result = query.execute();
+
+                List<Integer> zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
+                List<Integer> zimbraQueryPostFilterItems = new ArrayList<Integer>();
+                int zimbraQueryPreFilterChunkSize = 100;
+                int zimbraQueryPreFilterCounter = 0;
+
                 while (result.hasNext()) {
+                    zimbraQueryPreFilterCounter = zimbraQueryPreFilterCounter + 1;
                     int itemId = result.getNext().getItemId();
+                    zimbraQueryPreFilterItemsChunk.add(itemId);
+                    if (zimbraQueryPreFilterCounter == zimbraQueryPreFilterChunkSize) {
+                        filterAndAddToFilteredItemIds (zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems);
+                        zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
+                        zimbraQueryPreFilterCounter = 0;
+                    }
                     ZimbraLog.misc.info("DEBUG: mailboxId: " + mboxId + " ItemId: '" + itemId + "'" + ".");
                 }
+                filterAndAddToFilteredItemIds (zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems);
+                zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
+                zimbraQueryPreFilterCounter = 0;
+
                 IOUtil.closeQuietly(result);
 
 
