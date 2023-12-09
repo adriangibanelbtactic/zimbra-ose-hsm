@@ -34,20 +34,28 @@ import com.zimbra.cs.index.SortBy;
 import com.zimbra.cs.index.ZimbraQuery;
 import com.zimbra.cs.index.ZimbraQueryResults;
 
-import com.zimbra.cs.util.IOUtil;
-
 import com.zimbra.cs.mailbox.Mailbox;
 import com.zimbra.cs.mailbox.MailboxManager;
 import com.zimbra.cs.mailbox.OperationContext;
 
+import com.zimbra.cs.util.IOUtil;
+
+import com.zimbra.cs.volume.Volume;
+
 import com.zimbra.soap.admin.message.GetAllMailboxesRequest;
 import com.zimbra.soap.admin.message.GetAllMailboxesResponse;
-import com.zimbra.soap.JaxbUtil;
+import com.zimbra.soap.admin.message.GetAllVolumesRequest;
+import com.zimbra.soap.admin.message.GetAllVolumesResponse;
 
 import com.zimbra.soap.admin.type.MailboxInfo;
+import com.zimbra.soap.admin.type.VolumeInfo;
+
+import com.zimbra.soap.JaxbUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 public class BlobMover {
 
@@ -64,9 +72,43 @@ public class BlobMover {
         return ids;
     }
 
-    private void filterAndAddToFilteredItemIds (List<Integer> zimbraQueryPreFilterItemsChunk, List<Integer> zimbraQueryPostFilterItems) {
+    private List<Short> getValidOriginVolumeIds(SoapProvisioning prov, int destinationVolumeId) throws ServiceException {
+        List<Short> validOriginVolumeIds = new ArrayList<Short>();
+
+        GetAllVolumesRequest request = new GetAllVolumesRequest();
+        Element requestElement = JaxbUtil.jaxbToElement(request);
+        Element respElem = prov.invoke(requestElement);
+        GetAllVolumesResponse response = JaxbUtil.elementToJaxb(respElem);
+
+        for (VolumeInfo volumeInfo : response.getVolumes()) {
+
+            if (volumeInfo.getId() == destinationVolumeId) {
+                break;
+            }
+
+            if (volumeInfo.getType() == Volume.TYPE_INDEX) {
+                break;
+            }
+
+            // TODO: Make sure to use this in ZCS 10 and ?ZCS9?
+            // Not sure it's worth using reflection here
+            // in order to have an unique codebase.
+            // Related commit on zm-mailbox: 6e01a80383a9c8a3a1f94831c48c8309c177bbb0
+            //
+            // (volumeInfo.getStoreType() == Volume.StoreType.INTERNAL) &&
+            // volumeInfo.getStoreManagerClass() == 'WhateverMakesSense'
+
+            validOriginVolumeIds.add(volumeInfo.getId());
+        }
+
+        return validOriginVolumeIds;
+    }
+
+    private void filterAndAddToFilteredItemIds(SoapProvisioning prov, List<Integer> zimbraQueryPreFilterItemsChunk, List<Integer> zimbraQueryPostFilterItems, String validOriginVolumeIdsString) {
         if (!(zimbraQueryPreFilterItemsChunk.isEmpty())) {
-            zimbraQueryPostFilterItems.addAll(zimbraQueryPreFilterItemsChunk);
+            DbBlobFilter dbBlobFilter = new DbBlobFilter ();
+            List<Integer> filteredItems = dbBlobFilter.filterItemsByVolume(prov, zimbraQueryPreFilterItemsChunk, validOriginVolumeIdsString);
+            zimbraQueryPostFilterItems.addAll(filteredItems);
         }
         // TODO: Do the actual filter
     }
@@ -74,6 +116,11 @@ public class BlobMover {
     public void moveItems(SoapProvisioning prov, String hsmTypesString, String hsmSearchQueryString, short destinationVolumeId) throws ServiceException {
         DbConnection conn = null;
         try {
+
+            List<Short> validOriginVolumeIds = getValidOriginVolumeIds(prov, destinationVolumeId);
+            String validOriginVolumeIdsString = StringUtils.join(validOriginVolumeIds, ",");
+            ZimbraLog.misc.info("DEBUG: validOriginVolumeIdsString: '" + validOriginVolumeIdsString + "'" + ".");
+
             conn = DbPool.getConnection();
 
             List<Integer> mailboxIds = getAllMailboxIds(prov);
@@ -101,13 +148,13 @@ public class BlobMover {
                     int itemId = result.getNext().getItemId();
                     zimbraQueryPreFilterItemsChunk.add(itemId);
                     if (zimbraQueryPreFilterCounter == zimbraQueryPreFilterChunkSize) {
-                        filterAndAddToFilteredItemIds (zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems);
+                        filterAndAddToFilteredItemIds (prov, zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems, validOriginVolumeIdsString);
                         zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
                         zimbraQueryPreFilterCounter = 0;
                     }
                     // ZimbraLog.misc.info("DEBUG: mailboxId (Pre Filter): " + mboxId + " ItemId: '" + itemId + "'" + ".");
                 }
-                filterAndAddToFilteredItemIds (zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems);
+                filterAndAddToFilteredItemIds (prov, zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems, validOriginVolumeIdsString);
                 zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
                 zimbraQueryPreFilterCounter = 0;
 
