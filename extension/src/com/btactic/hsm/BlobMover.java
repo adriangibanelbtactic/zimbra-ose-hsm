@@ -105,7 +105,7 @@ public class BlobMover {
                         zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
                         zimbraQueryPreFilterCounter = 0;
                     }
-                    ZimbraLog.misc.info("DEBUG: mailboxId: " + mboxId + " ItemId: '" + itemId + "'" + ".");
+                    // ZimbraLog.misc.info("DEBUG: mailboxId (Pre Filter): " + mboxId + " ItemId: '" + itemId + "'" + ".");
                 }
                 filterAndAddToFilteredItemIds (zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems);
                 zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
@@ -114,6 +114,9 @@ public class BlobMover {
                 IOUtil.closeQuietly(result);
 
 
+                for (int zimbraQueryPostFilterItem : zimbraQueryPostFilterItems) {
+                    ZimbraLog.misc.info("DEBUG: mailboxId (Post Filter): " + mboxId + " ItemId: '" + zimbraQueryPostFilterItem + "'" + ".");
+                }
             }
         } finally {
             DbPool.quietClose(conn);
