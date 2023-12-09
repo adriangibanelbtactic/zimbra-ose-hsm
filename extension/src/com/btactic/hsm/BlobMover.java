@@ -32,6 +32,9 @@ import com.zimbra.cs.db.DbPool.DbConnection;
 import com.zimbra.cs.index.SearchParams;
 import com.zimbra.cs.index.SortBy;
 import com.zimbra.cs.index.ZimbraQuery;
+import com.zimbra.cs.index.ZimbraQueryResults;
+
+import com.zimbra.cs.util.IOUtil;
 
 import com.zimbra.cs.mailbox.Mailbox;
 import com.zimbra.cs.mailbox.MailboxManager;
@@ -79,8 +82,13 @@ public class BlobMover {
                 params.setFetchMode(SearchParams.Fetch.IDS);
 
                 ZimbraQuery query = new ZimbraQuery(new OperationContext(mbox), SoapProtocol.Soap12, mbox, params);
-                String queryPreVolumeFilter = query.toQueryString();
-                ZimbraLog.misc.info("DEBUG: mailbox: " + "queryPreVolumeFilter: '" + queryPreVolumeFilter + "'" + ".");
+                ZimbraQueryResults result = query.execute();
+                while (result.hasNext()) {
+                    int itemId = result.getNext().getItemId();
+                    ZimbraLog.misc.info("DEBUG: mailboxId: " + mboxId + " ItemId: '" + itemId + "'" + ".");
+                }
+                IOUtil.closeQuietly(result);
+
 
             }
         } finally {
