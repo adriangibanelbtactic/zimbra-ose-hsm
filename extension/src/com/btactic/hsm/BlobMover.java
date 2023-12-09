@@ -104,10 +104,10 @@ public class BlobMover {
         return validOriginVolumeIds;
     }
 
-    private void filterAndAddToFilteredItemIds(SoapProvisioning prov, List<Integer> zimbraQueryPreFilterItemsChunk, List<Integer> zimbraQueryPostFilterItems, String validOriginVolumeIdsString) {
+    private void filterAndAddToFilteredItemIds(SoapProvisioning prov, Mailbox mbox, List<Integer> zimbraQueryPreFilterItemsChunk, List<Integer> zimbraQueryPostFilterItems, String validOriginVolumeIdsString) throws ServiceException {
         if (!(zimbraQueryPreFilterItemsChunk.isEmpty())) {
             DbBlobFilter dbBlobFilter = new DbBlobFilter ();
-            List<Integer> filteredItems = dbBlobFilter.filterItemsByVolume(prov, zimbraQueryPreFilterItemsChunk, validOriginVolumeIdsString);
+            List<Integer> filteredItems = dbBlobFilter.filterItemsByVolume(prov, mbox, zimbraQueryPreFilterItemsChunk, validOriginVolumeIdsString);
             zimbraQueryPostFilterItems.addAll(filteredItems);
         }
         // TODO: Do the actual filter
@@ -148,13 +148,13 @@ public class BlobMover {
                     int itemId = result.getNext().getItemId();
                     zimbraQueryPreFilterItemsChunk.add(itemId);
                     if (zimbraQueryPreFilterCounter == zimbraQueryPreFilterChunkSize) {
-                        filterAndAddToFilteredItemIds (prov, zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems, validOriginVolumeIdsString);
+                        filterAndAddToFilteredItemIds (prov, mbox, zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems, validOriginVolumeIdsString);
                         zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
                         zimbraQueryPreFilterCounter = 0;
                     }
                     // ZimbraLog.misc.info("DEBUG: mailboxId (Pre Filter): " + mboxId + " ItemId: '" + itemId + "'" + ".");
                 }
-                filterAndAddToFilteredItemIds (prov, zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems, validOriginVolumeIdsString);
+                filterAndAddToFilteredItemIds (prov, mbox, zimbraQueryPreFilterItemsChunk, zimbraQueryPostFilterItems, validOriginVolumeIdsString);
                 zimbraQueryPreFilterItemsChunk = new ArrayList<Integer>();
                 zimbraQueryPreFilterCounter = 0;
 
