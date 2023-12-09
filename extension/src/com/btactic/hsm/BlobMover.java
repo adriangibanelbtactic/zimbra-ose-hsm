@@ -20,6 +20,7 @@ package com.btactic.hsm;
 import com.zimbra.common.service.ServiceException;
 
 import com.zimbra.common.soap.Element;
+import com.zimbra.common.soap.SoapProtocol;
 
 import com.zimbra.common.util.ZimbraLog;
 
@@ -27,6 +28,14 @@ import com.zimbra.cs.account.soap.SoapProvisioning;
 
 import com.zimbra.cs.db.DbPool;
 import com.zimbra.cs.db.DbPool.DbConnection;
+
+import com.zimbra.cs.index.SearchParams;
+import com.zimbra.cs.index.SortBy;
+import com.zimbra.cs.index.ZimbraQuery;
+
+import com.zimbra.cs.mailbox.Mailbox;
+import com.zimbra.cs.mailbox.MailboxManager;
+import com.zimbra.cs.mailbox.OperationContext;
 
 import com.zimbra.soap.admin.message.GetAllMailboxesRequest;
 import com.zimbra.soap.admin.message.GetAllMailboxesResponse;
@@ -60,6 +69,19 @@ public class BlobMover {
             List<Integer> mailboxIds = getAllMailboxIds(prov);
             for (int mboxId : mailboxIds) {
                 ZimbraLog.misc.info("DEBUG: mailbox: " + mboxId + " - hsmTypesString: '" + hsmTypesString + "' - hsmSearchQueryString: '" + hsmSearchQueryString + "' - destinationVolumeId: " + destinationVolumeId + ".");
+
+                Mailbox mbox = MailboxManager.getInstance().getMailboxById(mboxId);
+
+                SearchParams params = new SearchParams();
+                params.setQueryString(hsmSearchQueryString);
+                params.setSortBy(SortBy.NONE);
+                params.setTypes(hsmTypesString);
+                params.setFetchMode(SearchParams.Fetch.IDS);
+
+                ZimbraQuery query = new ZimbraQuery(new OperationContext(mbox), SoapProtocol.Soap12, mbox, params);
+                String queryPreVolumeFilter = query.toQueryString();
+                ZimbraLog.misc.info("DEBUG: mailbox: " + "queryPreVolumeFilter: '" + queryPreVolumeFilter + "'" + ".");
+
             }
         } finally {
             DbPool.quietClose(conn);
