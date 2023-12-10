@@ -55,7 +55,7 @@ public class DbBlobFilter {
             sql.append("SELECT mi.id FROM ");
             sql.append(DbMailItem.getMailItemTableName(mailbox, "mi", false));
             sql.append(" WHERE ");
-                sql.append(" mi.volume_id IN ");
+                sql.append(" mi.locator IN ");
                 sql.append("(");
                 sql.append(validOriginVolumeIdsString);
                 sql.append(")");
@@ -70,7 +70,7 @@ public class DbBlobFilter {
             sql.append("SELECT mi.id FROM ");
             sql.append(DbMailItem.getMailItemTableName(mailbox, "mi", true));
             sql.append(" WHERE ");
-                sql.append(" mi.volume_id IN ");
+                sql.append(" mi.locator IN ");
                 sql.append("(");
                 sql.append(validOriginVolumeIdsString);
                 sql.append(")");
