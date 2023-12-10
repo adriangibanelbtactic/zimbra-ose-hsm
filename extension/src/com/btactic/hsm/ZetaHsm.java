@@ -200,7 +200,7 @@ public class ZetaHsm {
                 }
             }
             catch (ServiceException e) {
-                ZimbraLog.misc.info("Unable to get 'zimbraHsmPolicy' attribute. Aborting.");
+                ZimbraLog.misc.info("Unable to get 'zimbraHsmPolicy' attribute. Aborting.", e);
                 return;
             }
         }
